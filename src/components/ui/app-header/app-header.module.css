@@ -9,6 +9,11 @@
   margin: 0 auto;
 }
 
+.item{
+  display: flex;
+  align-items:center;
+}
+
 .menu_part_left {
   display: flex;
   flex-basis: 35%;
