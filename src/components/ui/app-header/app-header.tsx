@@ -7,7 +7,7 @@ import {
   Logo,
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
   const location = useLocation();
@@ -15,7 +15,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>
         <div className={styles.menu_part_left}>
-          <Link
+          <NavLink
             to='/'
             className={
               location.pathname === '/' ? styles.link_active : styles.link
@@ -29,8 +29,8 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
                 Конструктор
               </span>
             </div>
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to='/feed'
             className={
               location.pathname.includes('feed')
@@ -46,13 +46,13 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
                 Лента заказов
               </span>
             </div>
-          </Link>
+          </NavLink>
         </div>
         <div className={styles.logo}>
           <Logo className='' />
         </div>
         <div className={styles.link_position_last}>
-          <Link
+          <NavLink
             to='/profile'
             className={
               location.pathname.includes('profile')
@@ -70,7 +70,7 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
                 {userName || 'Личный кабинет'}
               </span>
             </div>
-          </Link>
+          </NavLink>
         </div>
       </nav>
     </header>
