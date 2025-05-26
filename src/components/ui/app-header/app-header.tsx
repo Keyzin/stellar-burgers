@@ -15,38 +15,43 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>
         <div className={styles.menu_part_left}>
-          <>
-            <BurgerIcon type={'primary'} />
-            <Link
-              to='/'
-              className={
-                location.pathname === '/' ? styles.link_active : styles.link
-              }
-            >
-              <p className='text text_type_main-default ml-2 mr-10'>
+          <Link
+            to='/'
+            className={
+              location.pathname === '/' ? styles.link_active : styles.link
+            }
+          >
+            <div className={`${styles.item}`}>
+              <BurgerIcon
+                type={location.pathname === '/' ? 'primary' : 'secondary'}
+              />
+              <span className='text text_type_main-default ml-2 mr-10'>
                 Конструктор
-              </p>
-            </Link>
-          </>
-          <>
-            <ListIcon type={'primary'} />
-            <Link
-              to='/feed'
-              className={
-                location.pathname.includes('feed')
-                  ? styles.link_active
-                  : styles.link
-              }
-            >
-              <p className='text text_type_main-default ml-2'>Лента заказов</p>
-            </Link>
-          </>
+              </span>
+            </div>
+          </Link>
+          <Link
+            to='/feed'
+            className={
+              location.pathname.includes('feed')
+                ? styles.link_active
+                : styles.link
+            }
+          >
+            <div className={`${styles.item}`}>
+              <ListIcon
+                type={location.pathname === '/feed' ? 'primary' : 'secondary'}
+              />
+              <span className='text text_type_main-default ml-2'>
+                Лента заказов
+              </span>
+            </div>
+          </Link>
         </div>
         <div className={styles.logo}>
           <Logo className='' />
         </div>
         <div className={styles.link_position_last}>
-          <ProfileIcon type={'primary'} />
           <Link
             to='/profile'
             className={
@@ -55,9 +60,16 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
                 : styles.link
             }
           >
-            <p className='text text_type_main-default ml-2'>
-              {userName || 'Личный кабинет'}
-            </p>
+            <div className={`${styles.item}`}>
+              <ProfileIcon
+                type={
+                  location.pathname === '/profile' ? 'primary' : 'secondary'
+                }
+              />
+              <span className='text text_type_main-default ml-2'>
+                {userName || 'Личный кабинет'}
+              </span>
+            </div>
           </Link>
         </div>
       </nav>

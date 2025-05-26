@@ -6,12 +6,14 @@ type TOrderState = {
   order: TOrder | null;
   orderRequest: boolean;
   orderModalData: TOrder | null;
+  isLoading: boolean;
 };
 
 export const initialState: TOrderState = {
   order: null,
   orderRequest: false,
-  orderModalData: null
+  orderModalData: null,
+  isLoading: false
 };
 
 export const createOrder = createAsyncThunk(
@@ -29,26 +31,31 @@ const orderSlice = createSlice({
     clearOrder: (state) => {
       state.order = null;
       state.orderModalData = null;
+      state.isLoading = false;
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
         state.orderRequest = true;
+        state.isLoading = true;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.orderRequest = false;
         state.orderModalData = action.payload;
+        state.isLoading = false;
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.orderRequest = false;
+        state.isLoading = false;
       });
   },
   selectors: {
-    selectorOrder: (state) => state.orderModalData
+    selectorOrder: (state) => state.orderModalData,
+    selectorIsLoadingOrder: (state) => state.isLoading
   }
 });
 
 export const { clearOrder } = orderSlice.actions;
-export const { selectorOrder } = orderSlice.selectors;
+export const { selectorOrder, selectorIsLoadingOrder } = orderSlice.selectors;
 export default orderSlice.reducer;

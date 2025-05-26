@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient, TOrder, TConstructorItems } from '@utils-types';
+import { createOrder } from './orderSlice';
 
 type TConstructorState = {
   constructorItems: TConstructorItems;
-  orderRequest: boolean;
   orderModalData: TOrder | null;
 };
 
@@ -12,7 +12,6 @@ export const initialState: TConstructorState = {
     bun: null,
     ingredients: []
   },
-  orderRequest: false,
   orderModalData: null
 };
 
@@ -20,14 +19,27 @@ export const constructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
-    addIngredient(state, action: PayloadAction<TIngredient>) {
-      if (action.payload.type === 'bun') {
-        state.constructorItems.bun = action.payload;
-      } else {
-        state.constructorItems.ingredients.push({
-          ...action.payload,
-          id: crypto.randomUUID()
-        });
+    addIngredient: {
+      reducer(
+        state,
+        action: PayloadAction<{ ingredient: TIngredient; id: string }>
+      ) {
+        if (action.payload.ingredient.type === 'bun') {
+          state.constructorItems.bun = action.payload.ingredient;
+        } else {
+          state.constructorItems.ingredients.push({
+            ...action.payload.ingredient,
+            id: action.payload.id
+          });
+        }
+      },
+      prepare(ingredient: TIngredient) {
+        return {
+          payload: {
+            ingredient,
+            id: crypto.randomUUID()
+          }
+        };
       }
     },
     removeIngredient: (state, action: PayloadAction<string>) => {
@@ -50,9 +62,16 @@ export const constructorSlice = createSlice({
       state.constructorItems.ingredients = [];
     }
   },
+  extraReducers: (builder) => {
+    builder.addCase(createOrder.fulfilled, (state) => {
+      state.constructorItems = {
+        bun: null,
+        ingredients: []
+      };
+    });
+  },
   selectors: {
-    selectorConstructorItems: (state) => state.constructorItems,
-    constructorOrderRequest: (state) => state.orderRequest
+    selectorConstructorItems: (state) => state.constructorItems
   }
 });
 
@@ -63,6 +82,5 @@ export const {
   clearConstructor
 } = constructorSlice.actions;
 
-export const { selectorConstructorItems, constructorOrderRequest } =
-  constructorSlice.selectors;
+export const { selectorConstructorItems } = constructorSlice.selectors;
 export default constructorSlice.reducer;

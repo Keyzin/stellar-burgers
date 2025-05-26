@@ -11,7 +11,13 @@ import {
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  useMatch
+} from 'react-router-dom';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { OnlyAuth, OnlyUnAuth } from '../ProtectedRoute/protected-route';
 import { useEffect } from 'react';
@@ -22,6 +28,12 @@ import {
   selectorIsAuthChecked,
   setAuthChecked
 } from '../../slices/userSlice';
+import {
+  fetchIngredients,
+  selectIngridients
+} from '../../slices/ingredientsSlice';
+import { selectorOrder } from '../../slices/orderSlice';
+import { fetchFeeds, selectOrders } from '../../slices/feedSlice';
 
 const App = () => {
   const location = useLocation();
@@ -29,8 +41,10 @@ const App = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = getCookie('accessToken');
-  const isAuthenticated = useSelector(selectorIsAuthChecked);
-
+  const ingredients = useSelector(selectIngridients);
+  const feed = useSelector(selectOrders);
+  const feedOrderMatch = useMatch('/feed/:number');
+  const profileOrderMatch = useMatch('/profile/orders/:number');
   useEffect(() => {
     if (token) {
       dispatch(checkUserAuth());
@@ -38,6 +52,18 @@ const App = () => {
       dispatch(setAuthChecked(true));
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!ingredients.length) {
+      dispatch(fetchIngredients());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!feed.length) {
+      dispatch(fetchFeeds());
+    }
+  }, []);
 
   return (
     <div className={styles.app}>
@@ -64,6 +90,12 @@ const App = () => {
           path='/profile/orders'
           element={<OnlyAuth component={<ProfileOrders />} />}
         />
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route
+          path='/profile/orders/:number'
+          element={<OnlyAuth component={<OrderInfo />} />}
+        />
       </Routes>
       {backgroundLocation && (
         <Routes>
@@ -71,7 +103,7 @@ const App = () => {
             path='/feed/:number'
             element={
               <Modal
-                title={'Детали заказа'}
+                title={`#${feedOrderMatch?.params.number}`}
                 onClose={() => {
                   navigate(-1);
                 }}
@@ -97,7 +129,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal
-                title={'Детали заказа'}
+                title={`#${profileOrderMatch?.params.number}`}
                 onClose={() => {
                   navigate(-1);
                 }}
