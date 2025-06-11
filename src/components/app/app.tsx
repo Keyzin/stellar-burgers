@@ -21,18 +21,13 @@ import {
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { OnlyAuth, OnlyUnAuth } from '../ProtectedRoute/protected-route';
 import { useEffect } from 'react';
-import { deleteCookie, getCookie } from '../../utils/cookie';
+import { getCookie } from '../../utils/cookie';
 import { useDispatch, useSelector } from '../../services/store';
-import {
-  checkUserAuth,
-  selectorIsAuthChecked,
-  setAuthChecked
-} from '../../slices/userSlice';
+import { checkUserAuth, setAuthChecked } from '../../slices/userSlice';
 import {
   fetchIngredients,
   selectIngridients
 } from '../../slices/ingredientsSlice';
-import { selectorOrder } from '../../slices/orderSlice';
 import { fetchFeeds, selectOrders } from '../../slices/feedSlice';
 
 const App = () => {

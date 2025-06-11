@@ -97,6 +97,7 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.error.message || 'Ошибка';
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
@@ -116,19 +117,25 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Ошибка авторизации';
       })
+      .addCase(registerUser.pending, (state, action) => {
+        state.loading = true;
+      })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.error = null;
+        state.loading = false;
         state.isAuthChecked = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.error.message || 'Ошибка регистрации';
       })
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
       })
-      .addCase(logoutUser.rejected, (state) => {
+      .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.error.message || 'Ошибка выхода';
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.loading = false;
@@ -149,6 +156,28 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || '';
         state.isAuthChecked = true;
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка восстановления пароля';
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Ошибка сброса пароля';
       });
   },
   selectors: {

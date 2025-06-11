@@ -31,6 +31,7 @@ export const constructorSlice = createSlice({
             ...action.payload.ingredient,
             id: action.payload.id
           });
+          console.log(state.constructorItems.ingredients[0]);
         }
       },
       prepare(ingredient: TIngredient) {
